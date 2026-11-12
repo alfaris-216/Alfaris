@@ -71,7 +71,7 @@
     .gallery {
       position: relative;
       overflow: hidden;
-      min-height: 150px;
+      height: clamp(220px, 42vw, 360px);
       margin-bottom: 14px;
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -79,17 +79,15 @@
       box-shadow: 0 12px 28px rgba(0, 0, 0, .18);
     }
 
-    .gallery-track { display: flex; min-height: 150px; transition: transform .45s ease; direction: ltr; }
-    .gallery-slide { display: grid; min-width: 100%; min-height: 150px; place-items: center; }
+    .gallery-track { display: flex; height: 100%; transition: transform .45s ease; direction: ltr; }
+    .gallery-slide { display: grid; min-width: 100%; height: 100%; place-items: center; background: rgba(3, 11, 47, .5); }
     .gallery-slide img {
       display: block;
-      width: auto;
-      height: auto;
-      max-width: 92%;
-      max-height: 220px;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
-    .gallery-empty { display: grid; min-height: 150px; place-items: center; padding: 25px; color: var(--muted); font-size: .85rem; }
+    .gallery-empty { display: grid; height: 100%; place-items: center; padding: 25px; color: var(--muted); font-size: .85rem; }
     .gallery-btn {
       position: absolute;
       top: 50%;
@@ -162,11 +160,9 @@
     .card-image { display: grid; aspect-ratio: 1 / 1; place-items: center; overflow: hidden; background: rgba(3, 11, 47, .5); }
     .card-image img {
       display: block;
-      width: auto;
-      height: auto;
-      max-width: 100%;
-      max-height: 100%;
-      padding: 8px;
+      width: 100%;
+      height: 100%;
+      padding: 0;
       object-fit: contain;
     }
     .card-name { min-height: 48px; padding: 9px 10px 11px; color: #fff; font-size: .9rem; font-weight: 700; line-height: 1.4; }
@@ -174,13 +170,13 @@
     .mini-gallery { position: relative; overflow: hidden; height: clamp(220px, 42vw, 360px); background: rgba(3, 11, 47, .5); }
     .mini-gallery-track { display: flex; height: 100%; direction: ltr; transition: transform .45s ease; }
     .mini-gallery-slide { display: grid; min-width: 100%; place-items: center; }
-    .mini-gallery-slide img { display: block; width: 92%; height: 92%; padding: 8px; object-fit: contain; }
+    .mini-gallery-slide img { display: block; width: 100%; height: 100%; padding: 0; object-fit: contain; }
     .mini-gallery-dots { position: absolute; right: 0; bottom: 7px; left: 0; display: flex; justify-content: center; gap: 4px; direction: ltr; }
     .mini-gallery-dot { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, .55); }
     .mini-gallery-dot.active { width: 16px; background: var(--cyan); }
-    .mini-gallery .card-cta { position: absolute; right: 12px; bottom: 12px; left: 12px; z-index: 3; margin: 0; padding: 10px 8px; border: 1px solid rgba(255,255,255,.38); border-radius: 10px; color: #04210f; background: rgba(37,211,102,.94); box-shadow: 0 5px 16px rgba(0,0,0,.3); font-size: .84rem; font-weight: 700; animation: whatsapp-pulse 3.2s ease-in-out infinite; }
-    @keyframes whatsapp-pulse { 0%, 72%, 100% { transform: scale(1); box-shadow: 0 5px 16px rgba(0,0,0,.3); } 82% { transform: scale(1.025); box-shadow: 0 0 0 6px rgba(37,211,102,.16), 0 7px 20px rgba(0,0,0,.34); } }
-    .card-cta:active { transform: scale(.98); }
+    .catalog-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 12px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.38); border-radius: 12px; color: #04210f; background: var(--green); box-shadow: 0 5px 16px rgba(0,0,0,.25); font-size: .9rem; font-weight: 700; text-decoration: none; }
+    .catalog-whatsapp:hover { background: #35df73; }
+    .catalog-whatsapp:active { transform: scale(.98); }
     .empty { grid-column: 1 / -1; padding: 42px 0; color: var(--muted); text-align: center; }
 
     .modal[hidden] { display: none; }
@@ -225,7 +221,7 @@
     a:focus-visible, button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
     @media (max-width: 430px) {
-      .gallery-slide img { height: 190px; }
+      .gallery { height: 220px; }
       .brand-title { font-size: 1.05rem; }
       .brand-logo { width: 38px; }
       .back { padding-inline: 9px; font-size: .78rem; }
@@ -249,6 +245,8 @@
       <img class="brand-logo" src="../logo.png" alt="" width="701" height="952">
     </header>
 
+    <a class="catalog-whatsapp" href="https://wa.me/201023010934?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AA%D8%A8%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B3%D8%A7%D8%AA" target="_blank" rel="noopener noreferrer">اطلب الآن عبر واتساب</a>
+
     <section class="gallery" aria-label="صور من المصنع">
       <div id="galleryTrack" class="gallery-track"></div>
       <button id="galleryPrev" class="gallery-btn prev" type="button" aria-label="الصورة السابقة">›</button>
@@ -256,7 +254,6 @@
       <div id="galleryDots" class="gallery-dots"></div>
     </section>
 
-    <input id="search" class="search" type="search" placeholder="ابحث عن منتج..." aria-label="بحث عن منتج">
     <nav id="tabs" class="tabs" aria-label="أقسام الكتالوج"></nav>
     <section id="grid" class="grid" aria-live="polite"></section>
 
@@ -413,9 +410,8 @@
       $("#grid").innerHTML = items.length ? items.map((product, index) => product.cat === "tyby" ? `
         <article class="card medical-card" data-product="${esc(product.id)}">
           <div class="mini-gallery" data-mini-gallery="${esc(product.id)}">
-            <div class="mini-gallery-track">${product.images.map((image, imageIndex) => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, imageIndex === 0 ? "eager" : "lazy")}</div>`).join("")}</div>
+            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager")}</div>`).join("")}</div>
             <div class="mini-gallery-dots">${product.images.map((_, i) => `<span class="mini-gallery-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
-            <button class="card-cta" type="button" data-product="${esc(product.id)}">ادخل واطلب المقاس عبر واتساب</button>
           </div>
           <span class="card-name">${esc(product.name)}</span>
         </article>` : `
@@ -431,7 +427,7 @@
           gallery.querySelector(".mini-gallery-track").style.transform = `translateX(-${index * 100}%)`;
           gallery.querySelectorAll(".mini-gallery-dot").forEach((dot, i) => dot.classList.toggle("active", i === index));
         };
-        if (gallery.querySelectorAll(".mini-gallery-slide").length > 1) state.miniTimers.push(setInterval(update, 4000));
+        if (gallery.querySelectorAll(".mini-gallery-slide").length > 1) state.miniTimers.push(setInterval(update, 5000));
       });
     }
 
@@ -444,10 +440,10 @@
     }
 
     function renderGallery(images) {
-      $("#galleryTrack").innerHTML = images.length ? images.map((image, imageIndex) => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", imageIndex === 0 ? "eager" : "lazy")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
+      $("#galleryTrack").innerHTML = images.length ? images.map(image => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", "eager")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
       $("#galleryDots").innerHTML = images.map((_, i) => `<button class="gallery-dot${i === 0 ? " active" : ""}" type="button" data-gallery-index="${i}" aria-label="الصورة ${i + 1}"></button>`).join("");
       setGallerySlide(0);
-      if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 4000);
+      if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 5000);
     }
 
     function setDetailSlide(index) {
@@ -519,7 +515,6 @@
       renderGrid();
     });
 
-    $("#search").addEventListener("input", event => { state.query = event.target.value; renderGrid(); });
     $("#grid").addEventListener("click", event => {
       const card = event.target.closest("[data-product]");
       if (card) openProduct(state.products.find(product => product.id === card.dataset.product));
