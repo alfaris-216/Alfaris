@@ -410,7 +410,7 @@
       $("#grid").innerHTML = items.length ? items.map((product, index) => product.cat === "tyby" ? `
         <article class="card medical-card" data-product="${esc(product.id)}">
           <div class="mini-gallery" data-mini-gallery="${esc(product.id)}">
-            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager")}</div>`).join("")}</div>
+            <div class="mini-gallery-track">${product.images.map((image, imageIndex) => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, imageIndex === 0 ? "eager" : "lazy")}</div>`).join("")}</div>
             <div class="mini-gallery-dots">${product.images.map((_, i) => `<span class="mini-gallery-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
           </div>
           <span class="card-name">${esc(product.name)}</span>
@@ -440,7 +440,7 @@
     }
 
     function renderGallery(images) {
-      $("#galleryTrack").innerHTML = images.length ? images.map(image => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", "eager")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
+      $("#galleryTrack").innerHTML = images.length ? images.map((image, imageIndex) => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", imageIndex === 0 ? "eager" : "lazy")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
       $("#galleryDots").innerHTML = images.map((_, i) => `<button class="gallery-dot${i === 0 ? " active" : ""}" type="button" data-gallery-index="${i}" aria-label="الصورة ${i + 1}"></button>`).join("");
       setGallerySlide(0);
       if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 5000);
