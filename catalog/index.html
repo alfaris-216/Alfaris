@@ -85,8 +85,8 @@
       display: block;
       width: auto;
       height: auto;
-      max-width: 100%;
-      max-height: 260px;
+      max-width: 92%;
+      max-height: 220px;
       object-fit: contain;
     }
     .gallery-empty { display: grid; min-height: 150px; place-items: center; padding: 25px; color: var(--muted); font-size: .85rem; }
@@ -174,11 +174,12 @@
     .mini-gallery { position: relative; overflow: hidden; height: clamp(220px, 42vw, 360px); background: rgba(3, 11, 47, .5); }
     .mini-gallery-track { display: flex; height: 100%; direction: ltr; transition: transform .45s ease; }
     .mini-gallery-slide { display: grid; min-width: 100%; place-items: center; }
-    .mini-gallery-slide img { display: block; width: 100%; height: 100%; padding: 8px; object-fit: contain; }
+    .mini-gallery-slide img { display: block; width: 92%; height: 92%; padding: 8px; object-fit: contain; }
     .mini-gallery-dots { position: absolute; right: 0; bottom: 7px; left: 0; display: flex; justify-content: center; gap: 4px; direction: ltr; }
     .mini-gallery-dot { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, .55); }
     .mini-gallery-dot.active { width: 16px; background: var(--cyan); }
-    .card-cta { margin: 0 9px 10px; padding: 10px 8px; border: 0; border-radius: 10px; color: #04210f; background: var(--green); font-size: .84rem; font-weight: 700; }
+    .mini-gallery .card-cta { position: absolute; right: 12px; bottom: 12px; left: 12px; z-index: 3; margin: 0; padding: 10px 8px; border: 1px solid rgba(255,255,255,.38); border-radius: 10px; color: #04210f; background: rgba(37,211,102,.94); box-shadow: 0 5px 16px rgba(0,0,0,.3); font-size: .84rem; font-weight: 700; animation: whatsapp-pulse 3.2s ease-in-out infinite; }
+    @keyframes whatsapp-pulse { 0%, 72%, 100% { transform: scale(1); box-shadow: 0 5px 16px rgba(0,0,0,.3); } 82% { transform: scale(1.025); box-shadow: 0 0 0 6px rgba(37,211,102,.16), 0 7px 20px rgba(0,0,0,.34); } }
     .card-cta:active { transform: scale(.98); }
     .empty { grid-column: 1 / -1; padding: 42px 0; color: var(--muted); text-align: center; }
 
@@ -412,11 +413,11 @@
       $("#grid").innerHTML = items.length ? items.map((product, index) => product.cat === "tyby" ? `
         <article class="card medical-card" data-product="${esc(product.id)}">
           <div class="mini-gallery" data-mini-gallery="${esc(product.id)}">
-            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager")}</div>`).join("")}</div>
+            <div class="mini-gallery-track">${product.images.map((image, imageIndex) => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, imageIndex === 0 ? "eager" : "lazy")}</div>`).join("")}</div>
             <div class="mini-gallery-dots">${product.images.map((_, i) => `<span class="mini-gallery-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
+            <button class="card-cta" type="button" data-product="${esc(product.id)}">ادخل واطلب المقاس عبر واتساب</button>
           </div>
           <span class="card-name">${esc(product.name)}</span>
-          <button class="card-cta" type="button" data-product="${esc(product.id)}">ادخل واطلب المقاس عبر واتساب</button>
         </article>` : `
         <button class="card" type="button" data-product="${esc(product.id)}" aria-label="فتح تفاصيل ${esc(product.name)}">
           <span class="card-image">${imageMarkup(product.images[0], product.name, "lazy", "this.closest('.card').remove()")}</span>
@@ -430,7 +431,7 @@
           gallery.querySelector(".mini-gallery-track").style.transform = `translateX(-${index * 100}%)`;
           gallery.querySelectorAll(".mini-gallery-dot").forEach((dot, i) => dot.classList.toggle("active", i === index));
         };
-        if (gallery.querySelectorAll(".mini-gallery-slide").length > 1) state.miniTimers.push(setInterval(update, 5000));
+        if (gallery.querySelectorAll(".mini-gallery-slide").length > 1) state.miniTimers.push(setInterval(update, 4000));
       });
     }
 
@@ -443,10 +444,10 @@
     }
 
     function renderGallery(images) {
-      $("#galleryTrack").innerHTML = images.length ? images.map(image => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", "eager")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
+      $("#galleryTrack").innerHTML = images.length ? images.map((image, imageIndex) => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", imageIndex === 0 ? "eager" : "lazy")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
       $("#galleryDots").innerHTML = images.map((_, i) => `<button class="gallery-dot${i === 0 ? " active" : ""}" type="button" data-gallery-index="${i}" aria-label="الصورة ${i + 1}"></button>`).join("");
       setGallerySlide(0);
-      if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 5000);
+      if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 4000);
     }
 
     function setDetailSlide(index) {
