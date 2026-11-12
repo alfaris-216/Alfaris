@@ -174,9 +174,9 @@
     .mini-gallery-dots { position: absolute; right: 0; bottom: 7px; left: 0; display: flex; justify-content: center; gap: 4px; direction: ltr; }
     .mini-gallery-dot { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, .55); }
     .mini-gallery-dot.active { width: 16px; background: var(--cyan); }
-    .catalog-whatsapp { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0 0 12px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.38); border-radius: 12px; color: #04210f; background: var(--green); box-shadow: 0 5px 16px rgba(0,0,0,.25); font-size: .9rem; font-weight: 700; text-decoration: none; }
-    .catalog-whatsapp:hover { background: #35df73; }
-    .catalog-whatsapp:active { transform: scale(.98); }
+    .category-order { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin: 0 0 12px; padding: 12px 14px; border: 1px solid rgba(255,255,255,.38); border-radius: 12px; color: #04210f; background: var(--green); box-shadow: 0 5px 16px rgba(0,0,0,.25); font-size: .9rem; font-weight: 700; }
+    .category-order:hover { background: #35df73; }
+    .category-order:active { transform: scale(.98); }
     .empty { grid-column: 1 / -1; padding: 42px 0; color: var(--muted); text-align: center; }
 
     .modal[hidden] { display: none; }
@@ -245,8 +245,6 @@
       <img class="brand-logo" src="../logo.png" alt="" width="701" height="952">
     </header>
 
-    <a class="catalog-whatsapp" href="https://wa.me/201023010934?text=%D8%A7%D9%84%D8%B3%D9%84%D8%A7%D9%85%20%D8%B9%D9%84%D9%8A%D9%83%D9%85%D8%8C%20%D8%B9%D8%A7%D9%8A%D8%B2%20%D8%A7%D8%B3%D8%AA%D9%81%D8%B3%D8%B1%20%D8%B9%D9%86%20%D8%A7%D9%84%D9%85%D8%B1%D8%A7%D8%AA%D8%A8%20%D9%88%D8%A7%D9%84%D9%85%D9%82%D8%A7%D8%B3%D8%A7%D8%AA" target="_blank" rel="noopener noreferrer">اطلب الآن عبر واتساب</a>
-
     <section class="gallery" aria-label="صور من المصنع">
       <div id="galleryTrack" class="gallery-track"></div>
       <button id="galleryPrev" class="gallery-btn prev" type="button" aria-label="الصورة السابقة">›</button>
@@ -255,6 +253,7 @@
     </section>
 
     <nav id="tabs" class="tabs" aria-label="أقسام الكتالوج"></nav>
+    <button id="categoryOrder" class="category-order" type="button">اكتب المقاس واطلب على واتساب</button>
     <section id="grid" class="grid" aria-live="polite"></section>
 
     <footer>© مصنع الفارس للمراتب</footer>
@@ -400,6 +399,7 @@
 
     function renderTabs() {
       $("#tabs").innerHTML = categories.map(category => `<button class="tab" type="button" data-category="${esc(category.id)}" aria-pressed="${state.category === category.id}">${esc(category.name)}</button>`).join("");
+      $("#categoryOrder").textContent = `اكتب مقاس ${categoryName(state.category)} واطلب على واتساب`;
     }
 
     function renderGrid() {
@@ -513,6 +513,11 @@
       state.category = button.dataset.category;
       renderTabs();
       renderGrid();
+    });
+
+    $("#categoryOrder").addEventListener("click", () => {
+      const product = state.products.find(item => item.cat === state.category);
+      if (product) openProduct(product);
     });
 
     $("#grid").addEventListener("click", event => {
