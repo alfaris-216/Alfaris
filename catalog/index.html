@@ -326,21 +326,13 @@
     async function readAllRepositoryImages() {
       if (repositoryImagesPromise) return repositoryImagesPromise;
       repositoryImagesPromise = (async () => {
-        const repo = getRepositoryInfo();
-        const url = `https://api.github.com/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/git/trees/${encodeURIComponent(repo.branch)}?recursive=1`;
         try {
-          const response = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
-          if (!response.ok) throw new Error(`GitHub tree request failed: ${response.status}`);
-          const data = await response.json();
-          const base = `${repo.root}/`;
-          return (data.tree || [])
-            .filter(item => item.type === "blob" && item.path.startsWith(base) && IMAGE_EXTENSIONS.test(item.path))
-            .map(item => ({
-              path: item.path,
-              url: `https://raw.githubusercontent.com/${repo.owner}/${repo.repo}/${repo.branch}/${item.path.split("/").map(encodeURIComponent).join("/")}`
-            }));
+          const response = await fetch("images.json?v=1", { cache: "no-store" });
+          if (!response.ok) throw new Error(`Image manifest failed: ${response.status}`);
+          const manifest = await response.json();
+          return Object.values(manifest).flat().map(path => ({ url: path, fallbackUrl: path }));
         } catch (error) {
-          console.warn("تعذر قراءة صور GitHub:", error);
+          console.warn("تعذر قراءة فهرس الصور:", error);
           return [];
         }
       })();
@@ -348,12 +340,9 @@
     }
 
     async function readFolder(folder) {
-      const repo = getRepositoryInfo();
-      const base = `${repo.root}/${folder}/`;
       const files = await readAllRepositoryImages();
-      return files
-        .filter(file => file.path.startsWith(base) && IMAGE_EXTENSIONS.test(file.path))
-        .map(file => ({ url: file.url, fallbackUrl: file.url }));
+      const prefix = `catalog/${folder}/`;
+      return files.filter(file => file.url.startsWith(prefix));
     }
 
     function imageMarkup(image, alt, loading = "lazy", onerror = "") {

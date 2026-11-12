@@ -1,0 +1,28 @@
+{
+  "gallery": [
+    "catalog/gallery/IMG20260708181355.webp",
+    "catalog/gallery/IMG20260708185624.webp",
+    "catalog/gallery/IMG20260708191155.webp",
+    "catalog/gallery/IMG20260708191222.webp",
+    "catalog/gallery/IMG20261027122342.webp",
+    "catalog/gallery/IMG20261028120102.webp"
+  ],
+  "tyby": [
+    "catalog/tyby/tyby.webp"
+  ],
+  "sosat": [
+    "catalog/sosat/sosat.webp"
+  ],
+  "soft": [
+    "catalog/soft/soft.webp"
+  ],
+  "sosattyby": [
+    "catalog/sosattyby/sosattyby.webp"
+  ],
+  "kavar": [
+    "catalog/kavar/kavar.webp"
+  ],
+  "me5da": [
+    "catalog/me5da/me5da.webp"
+  ]
+}

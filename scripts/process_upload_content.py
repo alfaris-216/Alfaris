@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import io
+import json
 import os
 import sys
 from pathlib import Path
@@ -53,6 +54,20 @@ def valid_webp(content: bytes) -> bool:
         return False
 
 
+def write_manifest() -> None:
+    manifest = {}
+    for folder in FOLDERS:
+        destination_dir = DEST_ROOT / folder
+        manifest[folder] = sorted(
+            f"catalog/{folder}/{image.name}"
+            for image in destination_dir.glob("*.webp")
+            if image.is_file()
+        )
+    manifest_path = ROOT / "catalog" / "images.json"
+    manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Wrote image manifest: {manifest_path.relative_to(ROOT)}")
+
+
 def main() -> int:
     processed = 0
     for folder in FOLDERS:
@@ -78,6 +93,7 @@ def main() -> int:
             source.unlink()
             print(f"{source.relative_to(ROOT)} -> {destination.relative_to(ROOT)} ({len(content)} bytes)")
             processed += 1
+    write_manifest()
     print(f"Processed {processed} image(s).")
     return 0
 
