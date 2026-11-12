@@ -359,20 +359,23 @@
 
     async function loadImages() {
       const folderResults = await Promise.all(categories.map(async category => ({ category, images: await readFolder(category.id) })));
-      state.products = folderResults.map(({ category, images }, index) => {
+      state.products = folderResults.flatMap(({ category, images }, index) => {
         const defined = productData.find(product => product.cat === category.id) || {};
         const fallbackImage = localFolderImages(category.id);
-        return {
-          id: category.id,
+        const productImages = images.length ? images : fallbackImage;
+        return productImages.map((image, imageIndex) => ({
+          id: `${category.id}-${imageIndex + 1}`,
           cat: category.id,
-          name: defined.name || category.name,
+          name: productImages.length > 1
+            ? `${defined.name || category.name} — موديل ${imageIndex + 1}`
+            : (defined.name || category.name),
           desc: defined.desc || "",
           sizes: defined.sizes || [],
           thickness: defined.thickness || "",
           options: defined.heights || defined.options || [],
           type: defined.type || (index < 4 ? "mattress" : "item"),
-          images: images.length ? images : fallbackImage
-        };
+          images: [image]
+        }));
       });
     }
 

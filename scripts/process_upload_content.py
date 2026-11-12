@@ -16,7 +16,7 @@ FOLDERS = ("gallery", "tyby", "sosat", "soft", "sosattyby", "kavar", "me5da")
 SOURCE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 TARGET_BYTES = 100_000
 MAX_BYTES = 150_000
-MAX_DIMENSION = 1200
+MAX_DIMENSION = 1000
 
 
 def encode(image: Image.Image, quality: int) -> bytes:
@@ -52,6 +52,19 @@ def valid_webp(content: bytes) -> bool:
             return image.format == "WEBP" and image.width > 0 and image.height > 0
     except Exception:
         return False
+
+
+def optimize_existing_webp() -> None:
+    for destination in sorted(DEST_ROOT.rglob("*.webp")):
+        if destination.stat().st_size <= TARGET_BYTES:
+            continue
+        content = convert(destination)
+        if not valid_webp(content):
+            raise RuntimeError(f"Existing WebP validation failed: {destination}")
+        temporary = destination.with_suffix(".webp.tmp")
+        temporary.write_bytes(content)
+        os.replace(temporary, destination)
+        print(f"Re-optimized {destination.relative_to(ROOT)} ({len(content)} bytes)")
 
 
 def write_manifest() -> None:
@@ -93,6 +106,7 @@ def main() -> int:
             source.unlink()
             print(f"{source.relative_to(ROOT)} -> {destination.relative_to(ROOT)} ({len(content)} bytes)")
             processed += 1
+    optimize_existing_webp()
     write_manifest()
     print(f"Processed {processed} image(s).")
     return 0
