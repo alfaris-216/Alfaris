@@ -405,7 +405,7 @@
       const count = $("#galleryTrack").children.length;
       if (!count) return;
       state.galleryIndex = (index + count) % count;
-      $("#galleryTrack").style.transform = `translateX(${state.galleryIndex * 100}%)`;
+      $("#galleryTrack").style.transform = `translateX(-${state.galleryIndex * 100}%)`;
       $("#galleryDots").querySelectorAll(".gallery-dot").forEach((dot, i) => dot.classList.toggle("active", i === state.galleryIndex));
     }
 
@@ -420,7 +420,7 @@
       const count = $("#detailTrack").children.length;
       if (!count) return;
       state.detailIndex = (index + count) % count;
-      $("#detailTrack").style.transform = `translateX(${state.detailIndex * 100}%)`;
+      $("#detailTrack").style.transform = `translateX(-${state.detailIndex * 100}%)`;
       $("#detailDots").querySelectorAll(".detail-dot").forEach((dot, i) => dot.classList.toggle("active", i === state.detailIndex));
     }
 
