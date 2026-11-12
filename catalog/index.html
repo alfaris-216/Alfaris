@@ -170,6 +170,16 @@
       object-fit: contain;
     }
     .card-name { min-height: 48px; padding: 9px 10px 11px; color: #fff; font-size: .9rem; font-weight: 700; line-height: 1.4; }
+    .medical-card { display: flex; flex-direction: column; }
+    .mini-gallery { position: relative; overflow: hidden; aspect-ratio: 1 / .78; background: rgba(3, 11, 47, .5); }
+    .mini-gallery-track { display: flex; height: 100%; direction: ltr; transition: transform .45s ease; }
+    .mini-gallery-slide { display: grid; min-width: 100%; place-items: center; }
+    .mini-gallery-slide img { display: block; width: 100%; height: 100%; padding: 8px; object-fit: contain; }
+    .mini-gallery-dots { position: absolute; right: 0; bottom: 7px; left: 0; display: flex; justify-content: center; gap: 4px; direction: ltr; }
+    .mini-gallery-dot { width: 6px; height: 6px; padding: 0; border: 0; border-radius: 99px; background: rgba(255, 255, 255, .55); }
+    .mini-gallery-dot.active { width: 16px; background: var(--cyan); }
+    .card-cta { margin: 0 9px 10px; padding: 10px 8px; border: 0; border-radius: 10px; color: #04210f; background: var(--green); font-size: .84rem; font-weight: 700; }
+    .card-cta:active { transform: scale(.98); }
     .empty { grid-column: 1 / -1; padding: 42px 0; color: var(--muted); text-align: center; }
 
     .modal[hidden] { display: none; }
@@ -304,7 +314,7 @@
     });
     const productData = config.products || [];
     const whatsapp = config.whatsapp || FALLBACK_WHATSAPP;
-    const state = { category: categories[0].id, query: "", products: [], activeProduct: null, detailIndex: 0, galleryIndex: 0, selectedOption: "" };
+    const state = { category: categories[0].id, query: "", products: [], activeProduct: null, detailIndex: 0, galleryIndex: 0, selectedOption: "", miniTimers: [] };
 
     const $ = selector => document.querySelector(selector);
     const esc = value => String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[char]));
@@ -363,6 +373,17 @@
         const defined = productData.find(product => product.cat === category.id) || {};
         const fallbackImage = localFolderImages(category.id);
         const productImages = images.length ? images : fallbackImage;
+        if (category.id === "tyby") return [{
+          id: category.id,
+          cat: category.id,
+          name: defined.name || category.name,
+          desc: defined.desc || "",
+          sizes: defined.sizes || [],
+          thickness: defined.thickness || "",
+          options: defined.heights || defined.options || [],
+          type: defined.type || "mattress",
+          images: productImages
+        }];
         return productImages.map((image, imageIndex) => ({
           id: `${category.id}-${imageIndex + 1}`,
           cat: category.id,
@@ -386,11 +407,31 @@
     function renderGrid() {
       const query = state.query.trim().toLowerCase();
       const items = state.products.filter(product => product.cat === state.category && (!query || `${product.name} ${product.desc}`.toLowerCase().includes(query)));
-      $("#grid").innerHTML = items.length ? items.map((product, index) => `
+      state.miniTimers.forEach(timer => clearInterval(timer));
+      state.miniTimers = [];
+      $("#grid").innerHTML = items.length ? items.map((product, index) => product.cat === "tyby" ? `
+        <article class="card medical-card" data-product="${esc(product.id)}">
+          <div class="mini-gallery" data-mini-gallery="${esc(product.id)}">
+            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager")}</div>`).join("")}</div>
+            <div class="mini-gallery-dots">${product.images.map((_, i) => `<span class="mini-gallery-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
+          </div>
+          <span class="card-name">${esc(product.name)}</span>
+          <button class="card-cta" type="button" data-product="${esc(product.id)}">ادخل واطلب المقاس عبر واتساب</button>
+        </article>` : `
         <button class="card" type="button" data-product="${esc(product.id)}" aria-label="فتح تفاصيل ${esc(product.name)}">
           <span class="card-image">${imageMarkup(product.images[0], product.name, "lazy", "this.closest('.card').remove()")}</span>
           <span class="card-name">${esc(product.name)}</span>
         </button>`).join("") : `<p class="empty">لا توجد منتجات في هذا القسم حاليًا</p>`;
+      $("#grid").querySelectorAll("[data-mini-gallery]").forEach(gallery => {
+        let index = 0;
+        const update = () => {
+          const count = gallery.querySelectorAll(".mini-gallery-slide").length;
+          index = (index + 1) % count;
+          gallery.querySelector(".mini-gallery-track").style.transform = `translateX(-${index * 100}%)`;
+          gallery.querySelectorAll(".mini-gallery-dot").forEach((dot, i) => dot.classList.toggle("active", i === index));
+        };
+        if (gallery.querySelectorAll(".mini-gallery-slide").length > 1) state.miniTimers.push(setInterval(update, 5000));
+      });
     }
 
     function setGallerySlide(index) {
