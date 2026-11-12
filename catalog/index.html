@@ -410,7 +410,7 @@
     }
 
     function renderGallery(images) {
-      $("#galleryTrack").innerHTML = images.length ? images.map((image, i) => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", i ? "lazy" : "eager")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
+      $("#galleryTrack").innerHTML = images.length ? images.map(image => `<div class="gallery-slide">${imageMarkup(image, "صورة من مصنع الفارس", "eager")}</div>`).join("") : `<div class="gallery-empty">أضف صور أرض الواقع داخل مجلد gallery</div>`;
       $("#galleryDots").innerHTML = images.map((_, i) => `<button class="gallery-dot${i === 0 ? " active" : ""}" type="button" data-gallery-index="${i}" aria-label="الصورة ${i + 1}"></button>`).join("");
       setGallerySlide(0);
       if (images.length > 1) window.setInterval(() => setGallerySlide(state.galleryIndex + 1), 5000);
