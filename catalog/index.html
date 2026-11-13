@@ -366,11 +366,11 @@
 
     async function loadImages() {
       const folderResults = await Promise.all(categories.map(async category => ({ category, images: await readFolder(category.id) })));
-      state.products = folderResults.flatMap(({ category, images }, index) => {
+      state.products = folderResults.map(({ category, images }) => {
         const defined = productData.find(product => product.cat === category.id) || {};
         const fallbackImage = localFolderImages(category.id);
         const productImages = images.length ? images : fallbackImage;
-        if (category.id === "tyby") return [{
+        return {
           id: category.id,
           cat: category.id,
           name: defined.name || category.name,
@@ -380,20 +380,7 @@
           options: defined.heights || defined.options || [],
           type: defined.type || "mattress",
           images: productImages
-        }];
-        return productImages.map((image, imageIndex) => ({
-          id: `${category.id}-${imageIndex + 1}`,
-          cat: category.id,
-          name: productImages.length > 1
-            ? `${defined.name || category.name} — موديل ${imageIndex + 1}`
-            : (defined.name || category.name),
-          desc: defined.desc || "",
-          sizes: defined.sizes || [],
-          thickness: defined.thickness || "",
-          options: defined.heights || defined.options || [],
-          type: defined.type || (index < 4 ? "mattress" : "item"),
-          images: [image]
-        }));
+        };
       });
     }
 
