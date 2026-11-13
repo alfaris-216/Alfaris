@@ -407,18 +407,14 @@
       const items = state.products.filter(product => product.cat === state.category && (!query || `${product.name} ${product.desc}`.toLowerCase().includes(query)));
       state.miniTimers.forEach(timer => clearInterval(timer));
       state.miniTimers = [];
-      $("#grid").innerHTML = items.length ? items.map((product, index) => product.cat === "tyby" ? `
+      $("#grid").innerHTML = items.length ? items.map(product => `
         <article class="card medical-card" data-product="${esc(product.id)}">
           <div class="mini-gallery" data-mini-gallery="${esc(product.id)}">
-            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager")}</div>`).join("")}</div>
+            <div class="mini-gallery-track">${product.images.map(image => `<div class="mini-gallery-slide">${imageMarkup(image, product.name, "eager", "this.closest('.card').remove()")}</div>`).join("")}</div>
             <div class="mini-gallery-dots">${product.images.map((_, i) => `<span class="mini-gallery-dot${i === 0 ? " active" : ""}"></span>`).join("")}</div>
           </div>
           <span class="card-name">${esc(product.name)}</span>
-        </article>` : `
-        <button class="card" type="button" data-product="${esc(product.id)}" aria-label="فتح تفاصيل ${esc(product.name)}">
-          <span class="card-image">${imageMarkup(product.images[0], product.name, "eager", "this.closest('.card').remove()")}</span>
-          <span class="card-name">${esc(product.name)}</span>
-        </button>`).join("") : `<p class="empty">لا توجد منتجات في هذا القسم حاليًا</p>`;
+        </article>`).join("") : `<p class="empty">لا توجد منتجات في هذا القسم حاليًا</p>`;
       $("#grid").querySelectorAll("[data-mini-gallery]").forEach(gallery => {
         let index = 0;
         const update = () => {
