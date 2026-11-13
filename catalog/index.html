@@ -66,12 +66,12 @@
 
     .back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .brand-title { flex: 1; text-align: center; font-family: "Reem Kufi", sans-serif; font-size: 1.2rem; font-weight: 500; }
-    .brand-logo { width: 44px; height: auto; flex: none; }
+    .brand-logo { width: 50px; height: auto; flex: none; }
 
     .gallery {
       position: relative;
       overflow: hidden;
-      height: clamp(220px, 42vw, 360px);
+      height: clamp(205px, 39vw, 340px);
       margin-bottom: 14px;
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -121,13 +121,11 @@
     .search::placeholder { color: var(--muted); }
     .search:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(47, 214, 247, .12); }
 
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      padding: 10px 0 14px;
-    }
+    .tabs { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; padding: 10px 0 14px; direction: rtl; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+    .tabs::-webkit-scrollbar { display: none; }
     .tab {
+      flex: 0 0 auto;
+      min-width: 108px;
       min-height: 43px;
       padding: 7px 6px;
       border: 1px solid var(--line);
@@ -167,7 +165,7 @@
     }
     .card-name { min-height: 48px; padding: 9px 10px 11px; color: #fff; font-size: .9rem; font-weight: 700; line-height: 1.4; }
     .medical-card { display: flex; grid-column: 1 / -1; flex-direction: column; }
-    .mini-gallery { position: relative; overflow: hidden; height: clamp(220px, 42vw, 360px); background: rgba(3, 11, 47, .5); }
+    .mini-gallery { position: relative; overflow: hidden; height: clamp(205px, 39vw, 340px); background: rgba(3, 11, 47, .5); }
     .mini-gallery-track { display: flex; height: 100%; direction: ltr; transition: transform .45s ease; }
     .mini-gallery-slide { display: grid; min-width: 100%; place-items: center; }
     .mini-gallery-slide img { display: block; width: 100%; height: 100%; padding: 0; object-fit: contain; }
@@ -221,9 +219,9 @@
     a:focus-visible, button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 
     @media (max-width: 430px) {
-      .gallery { height: 220px; }
+      .gallery { height: 205px; }
       .brand-title { font-size: 1.05rem; }
-      .brand-logo { width: 38px; }
+      .brand-logo { width: 44px; }
       .back { padding-inline: 9px; font-size: .78rem; }
       .tab { font-size: .78rem; }
     }
